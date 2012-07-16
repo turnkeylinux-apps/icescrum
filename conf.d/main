@@ -43,3 +43,7 @@ echo 0.0.0.0/0:1,1023 > /etc/authbind/byuid/106
 # increase memory defaults
 echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat6
 
+# modify tomcat connectors protocol required by icescrum
+CONF=/etc/tomcat6/server.xml
+sed -i "s|HTTP\/1.1|org.apache.coyote.http11.Http11NioProtocol|" $CONF
+
