@@ -1,0 +1,15 @@
+#!/bin/sh -ex
+
+DB_NAME=icescrum
+DB_USER=icescrum
+DB_PASS=$(mcookie)
+
+ADMIN_NAME=admin
+ADMIN_PASS=turnkey
+ADMIN_MAIL=admin@example.com
+DOMAIN=www.example.com
+
+SRC=/usr/local/src
+WEBAPPS=/var/lib/tomcat6/webapps
+BASE_DIR=/var/local/lib/icescrum
+
