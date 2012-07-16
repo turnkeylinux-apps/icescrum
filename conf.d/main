@@ -36,3 +36,7 @@ chmod 640 $CONF
 mkdir -p $BASE_DIR
 chown -R tomcat6:tomcat6 $BASE_DIR
 
+# allow binding to 80/443 (and bugfix LP#594989)
+echo AUTHBIND=yes >> /etc/default/tomcat6
+echo 0.0.0.0/0:1,1023 > /etc/authbind/byuid/106
+
