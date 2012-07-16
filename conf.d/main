@@ -61,3 +61,6 @@ EOF
 mkdir -p /usr/share/tomcat6/.lbdsl
 chown -R tomcat6:tomcat6 /usr/share/tomcat6/.lbdsl
 
+# generate tomcat keystore from default ssl certificate
+/usr/lib/inithooks/firstboot.d/16tomcat-sslcert
+
