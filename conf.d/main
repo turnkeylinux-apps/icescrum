@@ -13,3 +13,10 @@ SRC=/usr/local/src
 WEBAPPS=/var/lib/tomcat6/webapps
 BASE_DIR=/var/local/lib/icescrum
 
+# unpack and drop war into webapps
+unzip $SRC/icescrum_*.zip -d $SRC
+rm $SRC/icescrum_*.zip
+
+rm -rf $WEBAPPS/ROOT
+mv $SRC/icescrum.war $WEBAPPS/ROOT.war
+
