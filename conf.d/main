@@ -78,4 +78,9 @@ $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost
 curl --max-time 200 'http://localhost/' 
 /etc/init.d/tomcat6 stop
 
+# set default configuration
+/usr/lib/inithooks/bin/icescrum.py --pass=$ADMIN_PASS --email=$ADMIN_MAIL --domain=$DOMAIN
+
+# stop mysql
+/etc/init.d/mysql stop
 
