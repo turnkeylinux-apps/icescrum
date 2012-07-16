@@ -20,3 +20,19 @@ rm $SRC/icescrum_*.zip
 rm -rf $WEBAPPS/ROOT
 mv $SRC/icescrum.war $WEBAPPS/ROOT.war
 
+# tweak configuration, set in tomcat environment and create base_dir
+CONF=/etc/icescrum/config.properties
+
+sed -i "s|DB_NAME|$DB_NAME|" $CONF
+sed -i "s|DB_USER|$DB_USER|" $CONF
+sed -i "s|DB_PASS|$DB_PASS|" $CONF
+sed -i "s|BASE_DIR|$BASE_DIR|" $CONF
+
+echo "icescrum_config_location=$CONF" >> /etc/default/tomcat6
+
+chown tomcat6:tomcat6 $CONF
+chmod 640 $CONF
+
+mkdir -p $BASE_DIR
+chown -R tomcat6:tomcat6 $BASE_DIR
+
