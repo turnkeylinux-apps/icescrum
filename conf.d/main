@@ -40,3 +40,6 @@ chown -R tomcat6:tomcat6 $BASE_DIR
 echo AUTHBIND=yes >> /etc/default/tomcat6
 echo 0.0.0.0/0:1,1023 > /etc/authbind/byuid/106
 
+# increase memory defaults
+echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat6
+
