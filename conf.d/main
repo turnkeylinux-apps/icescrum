@@ -57,3 +57,7 @@ grant {
 };
 EOF
 
+# workaround icescrum bug
+mkdir -p /usr/share/tomcat6/.lbdsl
+chown -R tomcat6:tomcat6 /usr/share/tomcat6/.lbdsl
+
