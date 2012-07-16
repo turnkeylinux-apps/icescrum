@@ -47,3 +47,13 @@ echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default
 CONF=/etc/tomcat6/server.xml
 sed -i "s|HTTP\/1.1|org.apache.coyote.http11.Http11NioProtocol|" $CONF
 
+# update local policy permissions
+cat >>/etc/tomcat6/policy.d/50local.policy<<EOF
+grant codeBase "file:\${catalina.base}/webapps/ROOT/-" {
+    permission java.security.AllPermission;
+};
+grant {
+    permission java.net.SocketPermission "localhost:3306", "connect, resolve";
+};
+EOF
+
