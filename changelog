@@ -1,0 +1,41 @@
+turnkey-icescrum-12.0 (1) turnkey; urgency=low
+
+  * Initial public release of TurnKey iceScrum, based on TKLPatch submitted
+    by Adrian Moya.
+
+  * Set iceScrum admin password, email and domain on firstboot (convenience,
+    security).
+
+  * Regenerates all secrets during installation / firstboot (security).
+
+  * iceScrum base directory set to: /var/local/lib/icescrum.
+
+  * SSL support out of the box.
+
+  * Tomcat and Java configurations
+
+    - Configured Tomcat admin/manager roles and admin user.
+    - Configured Tomcat HTTP connector to bind to port 80 (default: 8180).
+    - Configured SSL port to bind to port 443 (default: 8443).
+    - Disabled AJP connector on port 8009 (security).
+    - Tomcat and Java environment variables configuration system wide.
+
+  * Includes postfix MTA (bound to localhost) for sending of email (e.g.
+    password recovery). Also includes webmin postfix module for convenience.
+
+  * Major component versions
+
+    icescrum            R5_1.2 (upstream archive)
+    tomcat6             6.0.35-1+squeeze2
+    apache2             2.2.16-6+squeeze7
+    openjdk-6-jdk       6b18-1.8.13-0+squeeze2
+    openjdk-6-jre       6b18-1.8.13-0+squeeze2
+    ant                 1.8.0-4
+    mysql-server        5.1.63-0+squeeze1
+    libmysql-java       5.1.10+dfsg-2
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Alon Swartz <alon@turnkeylinux.org>  Wed, 01 Aug 2012 08:00:00 +0200
+
