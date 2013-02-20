@@ -15,6 +15,5 @@ webmin-mysql
 postfix
 webmin-postfix
 
-curl
 unzip
 
