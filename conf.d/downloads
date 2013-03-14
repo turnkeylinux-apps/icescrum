@@ -1,0 +1,12 @@
+#!/bin/bash -ex
+
+dl() {
+    [ "$FAB_HTTP_PROXY" ] && PROXY="--proxy $FAB_HTTP_PROXY"
+    cd $2; curl -L -f -O $PROXY $1; cd -
+}
+
+# icescrum
+VERSION="R6_3"
+URL="http://www.icescrum.org/downloads/icescrum_${VERSION}_war.zip"
+dl $URL /usr/local/src
+
