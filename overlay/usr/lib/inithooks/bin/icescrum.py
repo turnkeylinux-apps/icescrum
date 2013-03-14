@@ -59,7 +59,7 @@ def main():
             "iceScrum Email",
             "Enter email address for the iceScrum 'admin' account.",
             "admin@example.com")
-    
+
     if not domain:
         if 'd' not in locals():
             d = Dialog('TurnKey Linux - First boot configuration')
@@ -78,8 +78,8 @@ def main():
     m.execute('UPDATE icescrum.icescrum2_user SET passwd=\"%s\" WHERE username=\"admin\";' % hash)
     m.execute('UPDATE icescrum.icescrum2_user SET email=\"%s\" WHERE username=\"admin\";' % email)
 
-    config = "/etc/icescrum/config.properties"
-    system("sed -i \"s|serverURL =.*|serverURL = http://%s|\" %s" % (domain, config))
+    config = "/etc/icescrum/config.groovy"
+    system("sed -i \"s|serverURL =.*|serverURL = \\\"http://%s\\\"|\" %s" % (domain, config))
 
     # restart tomcat if running so changes will take effect
     try:

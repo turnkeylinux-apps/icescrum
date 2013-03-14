@@ -1,12 +1,12 @@
-### IceScrum configuration file ###
+/* IceScrum configuration file */
 
-## database configuration
-dataSource.driverClassName = org.gjt.mm.mysql.Driver
-dataSource.dialect = org.hibernate.dialect.MySQLInnoDBDialect
-dataSource.url = jdbc:mysql://localhost:3306/DB_NAME?useUnicode=true&characterEncoding=utf8&autoReconnect=true
-dataSource.username = DB_USER
-dataSource.password = DB_PASS
-dataSource.dbCreate = update
+// database configuration
+dataSource.driverClassName = "com.mysql.jdbc.Driver"
+dataSource.dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
+dataSource.url = "jdbc:mysql://localhost:3306/DB_NAME?useUnicode=true&characterEncoding=utf8&autoReconnect=true"
+dataSource.username = "DB_USER"
+dataSource.password = "DB_PASS"
+dataSource.dbCreate = "update"
 
 dataSource.pooled = true
 dataSource.properties.maxActive = 50
@@ -22,22 +22,22 @@ dataSource.properties.testWhileIdle = true
 dataSource.properties.testOnReturn = false
 dataSource.properties.validationQuery = "SELECT 1"
 
-## icescrum configuration
+// icescrum configuration
 icescrum.gravatar.enable = true
-icescrum.baseDir = BASE_DIR
+icescrum.baseDir = "BASE_DIR"
 
 icescrum.registration.enable = true
 icescrum.login.retrieve.enable = true
 icescrum.attachments.enable = true
-icescrum.timezone.default = System.getProperty('user.timezone') ?: 'UTC'
+icescrum.timezone.default = "UTC"
 
 icescrum.project.import.enable = true
 icescrum.project.export.enable = true
 icescrum.project.creation.enable = true
 icescrum.project.private.enable = true
 
-## grails configuration
-grails.mail.host = localhost
+// grails configuration
+grails.mail.host = "localhost"
 grails.mail.port = 25
-grails.serverURL = http://localhost
+grails.serverURL = "http://localhost"
 

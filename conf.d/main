@@ -21,7 +21,7 @@ rm -rf $WEBAPPS/ROOT
 mv $SRC/icescrum.war $WEBAPPS/ROOT.war
 
 # tweak configuration, set in tomcat environment and create base_dir
-CONF=/etc/icescrum/config.properties
+CONF=/etc/icescrum/config.groovy
 
 sed -i "s|DB_NAME|$DB_NAME|" $CONF
 sed -i "s|DB_USER|$DB_USER|" $CONF
