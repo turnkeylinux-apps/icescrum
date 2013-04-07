@@ -1,3 +1,21 @@
+turnkey-icescrum-12.1 (1) turnkey; urgency=low
+
+  * Icescrum:
+
+    - Upgraded to latest version.
+    - Transitioned configuration to groovy format (required in new version).
+    - Added geronimo-servlet to tomcat6/lib (required in new version).
+
+  * Hardcoded component versions:
+
+    icescrum            R6_3
+    geronimo-serverlet  3.0_spec-1.0
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Alon Swartz <alon@turnkeylinux.org>  Sun, 07 Apr 2013 08:00:00 +0200
+
 turnkey-icescrum-12.0 (1) turnkey; urgency=low
 
   * Initial public release of TurnKey iceScrum, based on TKLPatch submitted
