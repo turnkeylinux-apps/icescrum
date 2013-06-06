@@ -6,7 +6,7 @@ turnkey-icescrum-12.1 (1) turnkey; urgency=low
     - Transitioned configuration to groovy format (required in new version).
     - Added geronimo-servlet to tomcat6/lib (required in new version).
 
-  * Hardcoded component versions:
+  * Upstream source component versions:
 
     icescrum            R6_3
     geronimo-serverlet  3.0_spec-1.0
