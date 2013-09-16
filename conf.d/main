@@ -75,7 +75,7 @@ $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost
 
 # initialize icescrum
 /etc/init.d/tomcat6 start
-curl --max-time 1200 'http://localhost/'
+curl --retry 6 --retry-delay 5 --max-time 200 http://localhost/
 /etc/init.d/tomcat6 stop
 
 # set default configuration
