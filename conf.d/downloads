@@ -6,7 +6,7 @@ dl() {
 }
 
 # icescrum
-VERSION="R6_3"
+VERSION="R6_9"
 URL="http://www.icescrum.org/downloads/icescrum_${VERSION}_war.zip"
 dl $URL /usr/local/src
 
