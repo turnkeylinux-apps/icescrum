@@ -43,7 +43,7 @@ chmod 500 /etc/authbind/byport/443
 chown tomcat7 /etc/authbind/byport/443
 touch /etc/authbind/byport/80
 chmod 500 /etc/authbind/byport/80
-chown tomcat7 /etc/authbind/byport/8
+chown tomcat7 /etc/authbind/byport/80
 
 # increase memory defaults
 echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat7
