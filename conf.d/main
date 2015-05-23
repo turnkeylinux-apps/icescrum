@@ -10,7 +10,7 @@ ADMIN_MAIL=admin@example.com
 DOMAIN=www.example.com
 
 SRC=/usr/local/src
-WEBAPPS=/var/lib/tomcat6/webapps
+WEBAPPS=/var/lib/tomcat7/webapps
 BASE_DIR=/var/local/lib/icescrum
 
 # unpack and drop war into webapps
@@ -28,27 +28,32 @@ sed -i "s|DB_USER|$DB_USER|" $CONF
 sed -i "s|DB_PASS|$DB_PASS|" $CONF
 sed -i "s|BASE_DIR|$BASE_DIR|" $CONF
 
-echo "icescrum_config_location=$CONF" >> /etc/default/tomcat6
+echo "icescrum_config_location=$CONF" >> /etc/default/tomcat7
 
-chown tomcat6:tomcat6 $CONF
+chown tomcat7:tomcat7 $CONF
 chmod 640 $CONF
 
 mkdir -p $BASE_DIR
-chown -R tomcat6:tomcat6 $BASE_DIR
+chown -R tomcat7:tomcat7 $BASE_DIR
 
 # allow binding to 80/443 (and bugfix LP#594989)
 echo AUTHBIND=yes >> /etc/default/tomcat6
-echo 0.0.0.0/0:1,1023 > /etc/authbind/byuid/106
+touch /etc/authbind/byport/443
+chmod 500 /etc/authbind/byport/443
+chown tomcat7 /etc/authbind/byport/443
+touch /etc/authbind/byport/80
+chmod 500 /etc/authbind/byport/80
+chown tomcat7 /etc/authbind/byport/8
 
 # increase memory defaults
-echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat6
+echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat7
 
 # modify tomcat connectors protocol required by icescrum
-CONF=/etc/tomcat6/server.xml
+CONF=/etc/tomcat7/server.xml
 sed -i "s|HTTP\/1.1|org.apache.coyote.http11.Http11NioProtocol|" $CONF
 
 # update local policy permissions
-cat >>/etc/tomcat6/policy.d/50local.policy<<EOF
+cat >>/etc/tomcat7/policy.d/50local.policy<<EOF
 grant codeBase "file:\${catalina.base}/webapps/ROOT/-" {
     permission java.security.AllPermission;
 };
@@ -58,8 +63,8 @@ grant {
 EOF
 
 # workaround icescrum bug
-mkdir -p /usr/share/tomcat6/.lbdsl
-chown -R tomcat6:tomcat6 /usr/share/tomcat6/.lbdsl
+mkdir -p /usr/share/tomcat7/.lbdsl
+chown -R tomcat7:tomcat7 /usr/share/tomcat7/.lbdsl
 
 # generate tomcat keystore from default ssl certificate
 /usr/lib/inithooks/firstboot.d/16tomcat-sslcert
@@ -74,9 +79,9 @@ $MYSQL_ADMIN create $DB_NAME
 $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
 
 # initialize icescrum
-/etc/init.d/tomcat6 start
+/etc/init.d/tomcat7 start
 curl --retry 10 --retry-delay 10 --max-time 300 http://localhost/
-/etc/init.d/tomcat6 stop
+/etc/init.d/tomcat7 stop
 
 # set default configuration
 /usr/lib/inithooks/bin/icescrum.py --pass=$ADMIN_PASS --email=$ADMIN_MAIL --domain=$DOMAIN
