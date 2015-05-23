@@ -37,7 +37,7 @@ mkdir -p $BASE_DIR
 chown -R tomcat7:tomcat7 $BASE_DIR
 
 # allow binding to 80/443 (and bugfix LP#594989)
-echo AUTHBIND=yes >> /etc/default/tomcat6
+echo AUTHBIND=yes >> /etc/default/tomcat7
 touch /etc/authbind/byport/443
 chmod 500 /etc/authbind/byport/443
 chown tomcat7 /etc/authbind/byport/443
