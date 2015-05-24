@@ -36,7 +36,7 @@ chmod 640 $CONF
 mkdir -p $BASE_DIR
 chown -R tomcat7:tomcat7 $BASE_DIR
 
-# allow binding to 80/443 (and bugfix LP#594989)
+# allow binding to 80/443
 echo AUTHBIND=yes >> /etc/default/tomcat7
 touch /etc/authbind/byport/443
 chmod 500 /etc/authbind/byport/443
@@ -44,6 +44,9 @@ chown tomcat7 /etc/authbind/byport/443
 touch /etc/authbind/byport/80
 chmod 500 /etc/authbind/byport/80
 chown tomcat7 /etc/authbind/byport/80
+
+# java not connecting to MySQL without this. Seems like a bug!?
+ln -s /usr/share/java/mysql.jar /usr/share/tomcat7/lib/mysql.jar
 
 # increase memory defaults
 echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat7
