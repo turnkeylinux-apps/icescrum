@@ -11,12 +11,12 @@ and on top of that:
 
 - iceScrum configurations:
    
-   - installed from upstream WAR to /var/lib/tomcat6/webapps
+   - installed from upstream WAR to /var/lib/tomcat7/webapps
    - iceScrum base directory set to: /var/local/lib/icescrum.
 
 - Tomcat and Java configurations
    
-   - Uses OpenJDK 6 Java runtime environment
+   - Uses OpenJDK 7 Java runtime environment
    - Configured Tomcat admin/manager roles and admin user.
    - Configured Tomcat HTTP connector to bind to port 80 (default:
      8180).
