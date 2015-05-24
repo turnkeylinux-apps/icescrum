@@ -45,7 +45,7 @@ touch /etc/authbind/byport/80
 chmod 500 /etc/authbind/byport/80
 chown tomcat7 /etc/authbind/byport/80
 
-# java not connecting to MySQL without this. Seems like a bug!?
+# java not connecting to MySQL without this.
 ln -s /usr/share/java/mysql.jar /usr/share/tomcat7/lib/mysql.jar
 
 # increase memory defaults
