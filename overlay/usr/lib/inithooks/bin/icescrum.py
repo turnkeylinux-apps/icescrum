@@ -83,8 +83,8 @@ def main():
 
     # restart tomcat if running so changes will take effect
     try:
-        system("/etc/init.d/tomcat6 status >/dev/null")
-        system("/etc/init.d/tomcat6 restart")
+        system("/etc/init.d/tomcat7 status >/dev/null")
+        system("/etc/init.d/tomcat7 restart")
     except:
         pass
 

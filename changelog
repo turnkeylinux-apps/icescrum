@@ -1,3 +1,29 @@
+turnkey-icescrum-14.0 (1) turnkey; urgency=low
+
+  * Icescrum:
+
+    - Upgraded to latest release version.
+
+  * Tomcat/JDK:
+
+    - Upgraded to Tomcat7 (Jessie).
+    - Upgraded to OpenJDK7 (Jessie).
+
+  * Upstream source component versions:
+
+    icescrum            R6_1
+    geronimo-serverlet  3.0_spec-1.0
+
+  * Debian component versions:
+
+    tomcat7             7.0.56-3
+    openjdk-7-jdk       7u79-2.5.5-1~deb8u1
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Sun, 24 May 2015 04:09:42 +1000
+
 turnkey-icescrum-13.0 (1) turnkey; urgency=low
 
   * Icescrum:
