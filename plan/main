@@ -12,8 +12,5 @@ mysql-server
 libmysql-java
 webmin-mysql
 
-postfix
-webmin-postfix
-
 unzip
 
