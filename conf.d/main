@@ -14,11 +14,11 @@ WEBAPPS=/var/lib/tomcat7/webapps
 BASE_DIR=/var/local/lib/icescrum
 
 # unpack and drop war into webapps
-unzip $SRC/icescrum_*.zip -d $SRC
-rm $SRC/icescrum_*.zip
+#unzip $SRC/icescrum_*.zip -d $SRC
+#rm $SRC/icescrum_*.zip
 
 rm -rf $WEBAPPS/ROOT
-mv $SRC/icescrum.war $WEBAPPS/ROOT.war
+mv $SRC/icescrum_*.war $WEBAPPS/ROOT.war
 
 # tweak configuration, set in tomcat environment and create base_dir
 CONF=/etc/icescrum/config.groovy

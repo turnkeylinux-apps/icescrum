@@ -11,7 +11,7 @@ turnkey-icescrum-14.0 (1) turnkey; urgency=low
 
   * Upstream source component versions:
 
-    icescrum            R6_1
+    icescrum            R6_14.1
     geronimo-serverlet  3.0_spec-1.0
 
   * Debian component versions:
@@ -22,7 +22,7 @@ turnkey-icescrum-14.0 (1) turnkey; urgency=low
   * Note: Please refer to turnkey-core's changelog for changes common to all
     appliances. Here we only describe changes specific to this appliance.
 
- -- Jeremy Davis <jeremy@turnkeylinux.org>  Sun, 24 May 2015 04:09:42 +1000
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Sun, 31 Jul 2015 01:11:21 +1000
 
 turnkey-icescrum-13.0 (1) turnkey; urgency=low
 
