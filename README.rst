@@ -32,7 +32,7 @@ and on top of that:
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
--  Webmin, SSH, MySQL, phpMyAdmin: username **root**
+-  Webmin, SSH, MySQL: username **root**
 -  iceScrum: username **admin**
 
 .. _iceScrum: http://www.icescrum.org/en/
