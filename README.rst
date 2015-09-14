@@ -36,4 +36,4 @@ Credentials *(passwords set at first boot)*
 -  iceScrum: username **admin**
 
 .. _iceScrum: http://www.icescrum.org/en/
-.. _TurnKey Core: http://www.turnkeylinux.org/core
+.. _TurnKey Core: https://www.turnkeylinux.org/core
