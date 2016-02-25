@@ -1,3 +1,12 @@
+turnkey-icescrum-14.1 (1) turnkey; urgency=low
+
+  * Apply v14.0 Tomcat fix to icescrum appliance [#581].
+
+  * Note: Please refer to turnkey-core's changelog for changes common to all
+    appliances. Here we only describe changes specific to this appliance.
+
+ -- Jeremy Davis <jeremy@turnkeylinux.org>  Tue, 23 Feb 2016 16:25:30 +1100
+
 turnkey-icescrum-14.0 (1) turnkey; urgency=low
 
   * Icescrum:
