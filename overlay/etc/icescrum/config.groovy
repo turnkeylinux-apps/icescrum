@@ -23,6 +23,7 @@ dataSource.properties.testOnReturn = false
 dataSource.properties.validationQuery = "SELECT 1"
 
 // icescrum configuration
+icescrum.createDefaultAdmin = true
 icescrum.gravatar.enable = true
 icescrum.baseDir = "BASE_DIR"
 
