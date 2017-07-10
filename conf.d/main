@@ -32,6 +32,9 @@ chmod 640 $CONF
 mkdir -p $BASE_DIR
 chown -R tomcat7:tomcat7 $BASE_DIR
 
+# https://www.icescrum.com/documentation/application-server/
+rm /usr/share/tomcat7/lib/tomcat-jdbc.jar
+
 # allow binding to 80/443
 echo AUTHBIND=yes >> /etc/default/tomcat7
 touch /etc/authbind/byport/443
@@ -61,10 +64,6 @@ grant {
 };
 EOF
 
-# workaround icescrum bug
-mkdir -p /usr/share/tomcat7/.lbdsl
-chown -R tomcat7:tomcat7 /usr/share/tomcat7/.lbdsl
-
 # generate tomcat keystore from default ssl certificate
 /usr/lib/inithooks/firstboot.d/16tomcat-sslcert
 
@@ -85,7 +84,7 @@ INFO="Server startup"
 while [ ! "$(grep "$INFO" $LOG)" ]; do
     sleep 30
 done
-curl --retry 1 --retry-delay 10 --max-time 60 http://localhost/
+curl -k --retry 1 --retry-delay 10 --max-time 60 https://localhost/
 /etc/init.d/tomcat7 stop
 
 # set default configuration

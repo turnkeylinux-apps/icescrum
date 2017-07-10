@@ -81,8 +81,8 @@ def main():
     hash = hashlib.sha256(password).hexdigest()
 
     m = MySQL()
-    m.execute('UPDATE icescrum.icescrum2_user SET passwd=\"%s\" WHERE username=\"admin\";' % hash)
-    m.execute('UPDATE icescrum.icescrum2_user SET email=\"%s\" WHERE username=\"admin\";' % email)
+    m.execute('UPDATE icescrum.is_user SET passwd=\"%s\" WHERE username=\"admin\";' % hash)
+    m.execute('UPDATE icescrum.is_user SET email=\"%s\" WHERE username=\"admin\";' % email)
 
     config = "/etc/icescrum/config.groovy"
     system("sed -i \"s|serverURL =.*|serverURL = \\\"http://%s\\\"|\" %s" % (domain, config))
