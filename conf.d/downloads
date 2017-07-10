@@ -6,11 +6,6 @@ dl() {
 }
 
 # icescrum
-URL="https://www.icescrum.com/downloads/icescrum.war"
+URL="https://www.icescrum.com/downloads/v7/icescrum.war"
 dl $URL /usr/local/src
-
-# icescrum dep
-JAR="geronimo/specs/geronimo-servlet_3.0_spec/1.0/geronimo-servlet_3.0_spec-1.0.jar"
-URL="http://repo1.maven.org/maven2/org/apache/$JAR"
-dl $URL /usr/share/tomcat7/lib
 
