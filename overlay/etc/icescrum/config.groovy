@@ -25,7 +25,7 @@ dataSource.properties.validationQuery = "SELECT 1"
 icescrum.createDefaultAdmin = true
 icescrum.gravatar.enable = true
 icescrum.baseDir = "BASE_DIR"
-icescrum.log.dir = "/var/lib/tomcat7/logs"
+icescrum.log.dir = "/var/lib/tomcat8/logs"
 
 icescrum.registration.enable = true
 icescrum.invitation.enable = true
