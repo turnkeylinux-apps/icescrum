@@ -6,8 +6,6 @@ ant
 openjdk-8-jdk
 openjdk-8-jre
 
-libservlet3.1-java
-
 authbind        /* Allows non-root programs to bind() to low ports */
 
 mysql-server
