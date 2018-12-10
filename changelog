@@ -1,5 +1,7 @@
 turnkey-icescrum-15.1 (1) turnkey; urgency=low
 
+  * Install latest upstream iceScrum (7.29).
+
   * Rebuild to resolve inadvertant removal of mariadb during sec-updates
     - part of #1246.
 
