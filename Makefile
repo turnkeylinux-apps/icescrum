@@ -1,5 +1,4 @@
-COMMON_OVERLAYS = tomcat
-COMMON_CONF = tomcat
+COMMON_OVERLAYS = nginx
 
 include $(FAB_PATH)/common/mk/turnkey/mysql.mk
 include $(FAB_PATH)/common/mk/turnkey.mk

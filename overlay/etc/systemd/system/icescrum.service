@@ -1,0 +1,16 @@
+[Unit]
+Description=Icescrum server
+After=network.target mysqld.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+ProtectSystem=full
+ProtectHome=true
+ExecStart=/var/www/icescrum/run.sh
+KillSignal=SIGTERM
+
