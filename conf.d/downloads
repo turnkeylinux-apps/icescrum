@@ -6,6 +6,13 @@ dl() {
 }
 
 # icescrum
-URL="https://www.icescrum.com/downloads/v7/icescrum.war"
+URL="https://www.icescrum.com/downloads/v7/icescrum.jar"
+
 dl $URL /usr/local/src
 
+wget -qO - \
+    https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | \
+    gpg --dearmor > /usr/share/keyrings/adoptopenjdk.gpg 
+
+apt update
+apt install adoptopenjdk-8-hotspot adoptopenjdk-8-hotspot-jre

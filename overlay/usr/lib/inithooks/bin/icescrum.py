@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """Set iceScrum admin password, email and domain to serve
 
 Option:
@@ -16,13 +16,13 @@ import hashlib
 
 from dialog_wrapper import Dialog
 from mysqlconf import MySQL
-from executil import system
+import subprocess
 
 def usage(s=None):
     if s:
-        print >> sys.stderr, "Error:", s
-    print >> sys.stderr, "Syntax: %s [options]" % sys.argv[0]
-    print >> sys.stderr, __doc__
+        print("Error:", s, file=sys.stderr)
+    print("Syntax: %s [options]" % sys.argv[0], file=sys.stderr)
+    print(__doc__, file=sys.stderr)
     sys.exit(1)
 
 DEFAULT_DOMAIN="www.example.com"
@@ -31,7 +31,7 @@ def main():
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "h",
                                        ['help', 'pass=', 'email=', 'domain='])
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         usage(e)
 
     email = ""
@@ -78,19 +78,22 @@ def main():
 
     inithooks_cache.write('APP_DOMAIN', domain)
 
-    hash = hashlib.sha256(password).hexdigest()
+    hash = hashlib.sha256(password.encode('utf8')).hexdigest()
 
     m = MySQL()
-    m.execute('UPDATE icescrum.is_user SET passwd=\"%s\" WHERE username=\"admin\";' % hash)
-    m.execute('UPDATE icescrum.is_user SET email=\"%s\" WHERE username=\"admin\";' % email)
+    m.execute('UPDATE icescrum.is_user SET passwd=%s WHERE username=\"admin\";', (hash,))
+    m.execute('UPDATE icescrum.is_user SET email=%s WHERE username=\"admin\";', (email,))
 
-    config = "/etc/icescrum/config.groovy"
-    system("sed -i \"s|serverURL =.*|serverURL = \\\"http://%s\\\"|\" %s" % (domain, config))
+    config = "/var/www/icescrum/config.groovy"
+    subprocess.run([
+        "sed", "-i",
+        "s|serverURL =.*|serverURL = \"http://%s\"|" % domain, config
+    ])
 
     # restart tomcat if running so changes will take effect
     try:
-        system("/etc/init.d/tomcat8 status >/dev/null")
-        system("/etc/init.d/tomcat8 restart")
+        subprocess.run(["/etc/init.d/tomcat8", "status"], capture_output=True)
+        subprocess.run(["/etc/init.d/tomcat8", "restart"])
     except:
         pass
 

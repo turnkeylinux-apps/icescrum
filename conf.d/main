@@ -1,71 +1,24 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 
 DB_NAME=icescrum
 DB_USER=icescrum
 DB_PASS=$(mcookie)
-
 ADMIN_NAME=admin
 ADMIN_PASS=turnkey
 ADMIN_MAIL=admin@example.com
 DOMAIN=www.example.com
 
 SRC=/usr/local/src
-WEBAPPS=/var/lib/tomcat8/webapps
-BASE_DIR=/var/local/lib/icescrum
+BASE_DIR=/var/www/icescrum
 
-rm -rf $WEBAPPS/ROOT
-mv $SRC/icescrum.war $WEBAPPS/ROOT.war
-
-# tweak configuration, set in tomcat environment and create base_dir
-CONF=/etc/icescrum/config.groovy
-
-sed -i "s|DB_NAME|$DB_NAME|" $CONF
-sed -i "s|DB_USER|$DB_USER|" $CONF
-sed -i "s|DB_PASS|$DB_PASS|" $CONF
-sed -i "s|BASE_DIR|$BASE_DIR|" $CONF
-
-echo "icescrum_config_location=$CONF" >> /etc/default/tomcat8
-
-chown tomcat8:tomcat8 $CONF
-chmod 640 $CONF
+JAVA_BIN='/usr/lib/jvm/adoptopenjdk-8-hotspot-jre-amd64/bin/java'
 
 mkdir -p $BASE_DIR
-chown -R tomcat8:tomcat8 $BASE_DIR
 
-# https://www.icescrum.com/documentation/application-server/
-rm /usr/share/tomcat8/lib/tomcat-jdbc.jar
+mv /usr/local/src/icescrum.jar $BASE_DIR
 
-# allow binding to 80/443
-echo AUTHBIND=yes >> /etc/default/tomcat8
-touch /etc/authbind/byport/443
-chmod 500 /etc/authbind/byport/443
-chown tomcat8 /etc/authbind/byport/443
-touch /etc/authbind/byport/80
-chmod 500 /etc/authbind/byport/80
-chown tomcat8 /etc/authbind/byport/80
-
-# java not connecting to MySQL without this.
-ln -s /usr/share/java/mysql.jar /usr/share/tomcat8/lib/mysql.jar
-
-# increase memory defaults
-echo "JAVA_OPTS=\"\${JAVA_OPTS} -Xmx512M -XX:MaxPermSize=512M\"" >> /etc/default/tomcat8
-
-# modify tomcat connectors protocol required by icescrum
-CONF=/etc/tomcat8/server.xml
-sed -i "s|HTTP\/1.1|org.apache.coyote.http11.Http11NioProtocol|" $CONF
-
-# update local policy permissions
-cat >>/etc/tomcat8/policy.d/50local.policy<<EOF
-grant codeBase "file:\${catalina.base}/webapps/ROOT/-" {
-    permission java.security.AllPermission;
-};
-grant {
-    permission java.net.SocketPermission "localhost:3306", "connect, resolve";
-};
-EOF
-
-# generate tomcat keystore from default ssl certificate
-/usr/lib/inithooks/firstboot.d/16tomcat-sslcert
+mkdir -p $BASE_DIR
+chown -R www-data:www-data $BASE_DIR
 
 # setup the database
 service mysql start
@@ -76,19 +29,191 @@ MYSQL_ADMIN="mysqladmin --user=root --password=$MYSQL_PASS"
 $MYSQL_ADMIN create $DB_NAME
 $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
 
-# initialize icescrum
-LOG="/var/log/tomcat8/catalina.out"
-INFO="Server startup"
-/etc/init.d/tomcat8 start
-# waiting for icescrum to start
-while [ ! "$(grep "$INFO" $LOG)" ]; do
+urlencode() {
+    echo $1 | python3 -c 'print(__import__("urllib.parse").parse.quote_plus(input().rstrip()))'
+}
+
+start_icescrum() {
+    cd $BASE_DIR
+    $BASE_DIR/run.sh &> /tmp/icescrum&
+    # can't just get the $! value here as it'll return the bash
+    # script's pid
+    while [ -z "$(pgrep java)" ]; do
+        sleep 1
+    done
+    echo $(pgrep java) > /tmp/icescrum_pid
+    # waiting for icescrum to start
+    while [ ! "$(grep "iceScrum is running!" /tmp/icescrum)" ]; do
+        sleep 30
+    done
+    sleep 30
+}
+stop_icescrum() {
+    pid=$(cat /tmp/icescrum_pid)
+    kill $pid
+    while [ -d "/proc/$pid" ]; do
+        sleep 30
+    done
+    rm /tmp/icescrum_pid
+}
+
+start_icescrum
+
+curl 'http://localhost:8080/setup' --data-raw \
+    "icescrum.registration.enable=true&\
+icescrum.gravatar.enable=true&\
+icescrum.user.search.enable=true&\
+icescrum.project.import.enable=true&\
+icescrum.project.export.enable=true&\
+icescrum.project.creation.enable=true&\
+icescrum.project.private.enable=true&\
+icescrum.project.private.default=false&\
+icescrum.invitation.enable=false&\
+icescrum.login.retrieve.enable=false&\
+icescrum.alerts.enable=false&\
+icescrum.alerts.errors.to=dev%40icescrum.org&\
+icescrum.alerts.default.from=webmaster%40icescrum.org&\
+icescrum.alerts.subject_prefix=%5Bicescrum%5D&\
+icescrum.alerts.emailPerAccount=false&\
+grails.mail.host=&\
+grails.mail.port=&\
+grails.mail.username=&\
+grails.mail.password=&\
+grails.mail.props=&\
+grails.mail.testConnection=&\
+dataSource.driverClassName=com.mysql.jdbc.Driver&\
+dataSource.url=jdbc%3Amysql%3A%2F%2Flocalhost%3A3306%2F$DB_NAME%3FuseUnicode%3Dtrue%26characterEncoding%3Dutf8&\
+dataSource.username=$DB_USER&\
+dataSource.password=$DB_PASS&\
+dataSource.dialect=org.hibernate.dialect.MySQL5InnoDBDialect&\
+dataSource.testConnection=&\
+icescrum.serverURL=http%3A%2F%2Flocalhost%3A8080&\
+icescrum.baseDir=%2Fvar%2Fwww%2Ficescrum&\
+icescrum.feedback.enable=true&\
+icescrum.check.enable=true&\
+icescrum.reportUsage.enable=true&\
+icescrum.announcement.enable=true&\
+icescrum.debug.enable=false&\
+icescrum.securitydebug.enable=false&\
+icescrum.pushdebug.enable=false&\
+icescrum.profiling.enable=false&\
+icescrum.log.dir=%2Fvar%2Fwww%2Ficescrum%2Flogs&\
+icescrum.log.download=&\
+icescrum.push.testConnection=&\
+icescrum.cors.enable=true&\
+icescrum.cors.allow.origin.regex=&\
+icescrum.sessionTimeoutSeconds=1800&\
+icescrum.migration.oldServerURL=&\
+icescrum.migration.adminUsername=&\
+icescrum.migration.adminPassword=&\
+icescrum.cloudAttachments.drawio.enable=true&\
+icescrum.cloudAttachments.gdrive.enable=false&\
+icescrum.cloudAttachments.gdrive.apiKey=&\
+icescrum.cloudAttachments.gdrive.developerKey=&\
+icescrum.cloudAttachments.onedrive.enable=false&\
+icescrum.cloudAttachments.onedrive.apiKey=&\
+icescrum.cloudAttachments.miro.enable=false&\
+icescrum.cloudAttachments.miro.apiKey=&\
+icescrum.cloudAttachments.box.enable=false&\
+icescrum.cloudAttachments.box.apiKey=&\
+icescrum.cloudAttachments.dropbox.enable=false&\
+icescrum.cloudAttachments.dropbox.apiKey=hz3ig3bvxatx3rz&\
+icescrum.msTeams.enable=&\
+icescrum.msTeams.connectorId=&\
+icescrum.gmeet.enable=&\
+icescrum.clientsOauth.gmeet.clientId=&\
+icescrum.clientsOauth.gmeet.clientSecret=&\
+icescrum.zoom.enable=&\
+icescrum.clientsOauth.zoom.clientId=&\
+icescrum.clientsOauth.zoom.clientSecret=&\
+icescrum.discord.enable=&\
+icescrum.clientsOauth.discord.clientId=&\
+icescrum.clientsOauth.discord.clientSecret=&\
+icescrum.preauth.active=false&\
+icescrum.preauth.enforce=false&\
+icescrum.preauth.mapper.principalHeaderName=username&\
+icescrum.preauth.mapper.firstNameHeaderName=firstName&\
+icescrum.preauth.mapper.lastNameHeaderName=lastName&\
+icescrum.preauth.mapper.emailHeaderName=email&\
+icescrum.preauth.customLogoutUrl=%2F&\
+icescrum.hooks.enable=false&\
+icescrum.hooks.disableAfterErrors=5&\
+icescrum.companion.enable=false&\
+grails.plugin.springsecurity.ldap.active=false&\
+grails.plugin.springsecurity.ldap.context.server=ldap%3A%2F%2Flocalhost%3A389&\
+grails.plugin.springsecurity.ldap.search.base=&\
+grails.plugin.springsecurity.ldap.search.filter=(uid%3D%7B0%7D)&\
+grails.plugin.springsecurity.ldap.search.searchSubtree=true&\
+icescrum.ldap.mapper.firstNameAttributeName=givenName&\
+icescrum.ldap.mapper.lastNameAttributeName=sn&\
+icescrum.ldap.mapper.emailAttributeName=mail&\
+grails.plugin.springsecurity.ldap.context.managerDn=$(urlencode "cn=admin,dc=example,dc=com")&\
+grails.plugin.springsecurity.ldap.context.managerPassword=&\
+grails.plugin.springsecurity.ldap.context.anonymousReadOnly=true&\
+icescrum.ldap.testConnection=&\
+grails.plugin.springsecurity.saml.active=false&\
+icescrum.saml.behindReverseProxy=false&\
+icescrum.saml.maxAuthenticationAge=7200&\
+grails.plugin.springsecurity.saml.signatureAlgorithm=rsa-sha1&\
+grails.plugin.springsecurity.saml.metadata.idp.file=%2Fvar%2Fwww%2Ficescrum%2Fsaml%2Fidp%2Fidp-icescrum-com.xml&\
+icescrum.saml.getSpMetadataFile=http%3A%2F%2Flocalhost%3A8080%2Fsaml%2Fmetadata&\
+grails.plugin.springsecurity.saml.metadata.sp.entityID=sp_icescrum&\
+grails.plugin.springsecurity.saml.metadata.sp.requestSigned=true&\
+grails.plugin.springsecurity.saml.metadata.sp.wantAssertionSigned=false&\
+grails.plugin.springsecurity.saml.metadata.sp.includeDiscoveryExtension=true&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.signMetadata=false&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.requireArtifactResolveSigned=false&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.requireLogoutRequestSigned=false&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.requireLogoutResponseSigned=false&\
+grails.plugin.springsecurity.saml.keyManager.storePass=nalle123&\
+grails.plugin.springsecurity.saml.keyManager.storeFile=%2Fvar%2Fwww%2Ficescrum%2Fsaml%2Fkeystore.jks&\
+icescrum.saml.testKeyStoreAndKeys=&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.signingKey=&\
+icescrum.saml.signingKeyPassword=&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.encryptionKey=&\
+icescrum.saml.encryptionKeyPassword=&\
+grails.plugin.springsecurity.saml.metadata.sp.defaults.tlsKey=&\
+icescrum.saml.tlsKeyPassword=&\
+grails.plugin.springsecurity.saml.keyManager.passwords=ping%3Dping123&\
+icescrum.saml.mapper.userNameAttributeName=username&\
+icescrum.saml.mapper.firstNameAttributeName=firstName&\
+icescrum.saml.mapper.lastNameAttributeName=lastName&\
+icescrum.saml.mapper.emailAttributeName=email&\
+icescrum.saml.mapper.languageAttributeName=language&\
+icescrum.beta.enable=false&\
+icescrum.beta.companion.enable=false&\
+icescrum.beta.usersOnline.enable=false&\
+icescrum.restart=false&\
+username=$ADMIN_NAME&\
+email=$(urlencode $ADMIN_MAIL)&\
+password=$ADMIN_PASS&\
+confirmPassword=$ADMIN_PASS"
+
+# restart to ensure mysql tables are created
+stop_icescrum
+start_icescrum
+
+# wait until mysql tables definitely exist
+while [ $(mysql -u root -sse \
+    "select count(*) from information_schema.tables where \
+        table_schema='icescrum' and table_name='is_user';") -lt 1 ]; do
     sleep 30
 done
-#curl -k --retry 1 --retry-delay 10 --max-time 60 http://localhost/
-#/etc/init.d/tomcat8 stop
+
+stop_icescrum
+
+# for some reason on setup icescrum doesn't honor our setting of config
+# location, on subsequent launches it does so we can safely move it after
+# setup
+mv /root/.icescrum/config.groovy /var/www/icescrum
 
 # set default configuration
 /usr/lib/inithooks/bin/icescrum.py --pass=$ADMIN_PASS --email=$ADMIN_MAIL --domain=$DOMAIN
+
+ln -s /etc/nginx/sites-available/icescrum /etc/nginx/sites-enabled
+rm /etc/nginx/sites-enabled/default
+chown -R www-data:www-data /var/www/icescrum
+systemctl enable icescrum
 
 # stop mysql
 service mysql stop
