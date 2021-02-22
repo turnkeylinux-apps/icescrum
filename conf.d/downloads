@@ -15,4 +15,4 @@ wget -qO - \
     gpg --dearmor > /usr/share/keyrings/adoptopenjdk.gpg 
 
 apt update
-apt install adoptopenjdk-8-hotspot adoptopenjdk-8-hotspot-jre
+apt install -y adoptopenjdk-8-hotspot adoptopenjdk-8-hotspot-jre
