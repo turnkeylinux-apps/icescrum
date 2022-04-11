@@ -1,14 +1,14 @@
 #include <turnkey/base>
 #include <turnkey/mysql>
 
+nginx
+
 ant
 
 authbind        /* Allows non-root programs to bind() to low ports */
 
 libmariadb-java
 webmin-mysql
-
-nginx
 
 unzip
 

@@ -211,10 +211,9 @@ mv /root/.icescrum/config.groovy /var/www/icescrum
 /usr/lib/inithooks/bin/icescrum.py --pass=$ADMIN_PASS --email=$ADMIN_MAIL --domain=$DOMAIN
 
 ln -s /etc/nginx/sites-available/icescrum /etc/nginx/sites-enabled
-rm /etc/nginx/sites-enabled/default
 chown -R www-data:www-data /var/www/icescrum
 systemctl enable icescrum
+rm /etc/nginx/sites-enabled/tkl-default
 
 # stop mysql
 service mysql stop
-
