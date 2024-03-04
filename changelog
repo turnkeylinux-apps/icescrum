@@ -1,3 +1,12 @@
+turnkey-icescrum-18.0 (1) turnkey; urgency=low
+
+  * Install latest upstream iceScrum: 7.54.
+
+  * Installed Java 8 (OpenJDK8) (iceScrum dependency) from Adoptium.
+    For more info, please see https://adoptium.net/
+
+ -- Stefan Davis <stefan@turnkeylinux.org>  Mon, 04 Mar 2024 23:15:35 +0000
+
 turnkey-icescrum-17.1 (1) turnkey; urgency=low
 
   * Updated all Debian packages to latest.

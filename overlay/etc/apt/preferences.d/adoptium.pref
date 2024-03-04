@@ -1,0 +1,11 @@
+Package: *
+Pin: origin dl.yarnpkg.com
+Pin-Priority: 10
+
+Package: temurin-8-jre
+Pin: origin dl.yarnpkg.com
+Pin-Priority: 500
+
+Package: temurin-8-jdk
+Pin: origin dl.yarnpkg.com
+Pin-Priority: 500
