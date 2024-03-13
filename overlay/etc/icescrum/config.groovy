@@ -25,7 +25,7 @@ dataSource.properties.validationQuery = "SELECT 1"
 icescrum.createDefaultAdmin = true
 icescrum.gravatar.enable = true
 icescrum.baseDir = "BASE_DIR"
-icescrum.log.dir = "/var/lib/tomcat8/logs"
+icescrum.log.dir = "/var/log/icescrum"
 
 icescrum.registration.enable = true
 icescrum.invitation.enable = true
@@ -40,6 +40,7 @@ icescrum.project.private.enable = true
 icescrum.project.private.default = false
 
 icescrum.serverURL="http://mytkldev.tklapp.com"
+icescrum.baseDir="/var/www/icescrum"
 
 // grails configuration
 grails.mail.host = "localhost"

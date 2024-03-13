@@ -11,8 +11,8 @@ URL="https://www.icescrum.com/downloads/v7/icescrum.jar"
 dl $URL /usr/local/src
 
 wget -qO - \
-    https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | \
-    gpg --dearmor > /usr/share/keyrings/adoptopenjdk.gpg 
+    https://packages.adoptium.net/artifactory/api/gpg/key/public | \
+    gpg --dearmor > /usr/share/keyrings/adoptium.gpg
 
 apt update
-apt install -y adoptopenjdk-8-hotspot adoptopenjdk-8-hotspot-jre
+apt install -y temurin-8-jdk temurin-8-jre

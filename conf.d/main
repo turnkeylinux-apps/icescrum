@@ -30,7 +30,7 @@ $MYSQL_ADMIN create $DB_NAME
 $MYSQL_BATCH --execute "grant all privileges on $DB_NAME.* to $DB_USER@localhost identified by '$DB_PASS'; flush privileges;"
 
 urlencode() {
-    echo $1 | python3 -c 'print(__import__("urllib.parse").parse.quote_plus(input().rstrip()))'
+    python3 -c 'print(__import__("urllib.parse").parse.quote_plus(input().rstrip()))' <<<"$1"
 }
 
 start_icescrum() {
@@ -41,9 +41,10 @@ start_icescrum() {
     while [ -z "$(pgrep java)" ]; do
         sleep 1
     done
-    echo $(pgrep java) > /tmp/icescrum_pid
+    pgrep java > /tmp/icescrum_pid
     # waiting for icescrum to start
-    while [ ! "$(grep "iceScrum is running!" /tmp/icescrum)" ]; do
+    until grep "iceScrum is running!" /tmp/icescrum;
+    do
         sleep 30
     done
     sleep 30
@@ -54,9 +55,11 @@ stop_icescrum() {
     while [ -d "/proc/$pid" ]; do
         sleep 30
     done
+    sleep 30
     rm /tmp/icescrum_pid
 }
 
+echo '127.0.0.1 tkldev' >> /etc/hosts
 start_icescrum
 
 curl 'http://localhost:8080/setup' --data-raw \
@@ -202,10 +205,16 @@ done
 
 stop_icescrum
 
+sed -i '/^dataSource\.url/ s/DB_NAME/icescrum/g' /etc/icescrum/config.groovy
+sed -i '/^dataSource\.username/ s/DB_USER/icescrum/g' /etc/icescrum/config.groovy
+sed -i '/^ICESCRUM_CONFIG/ s|=.*|=/etc/icescrum/config.groovy|g' /var/www/icescrum/run.sh
+mkdir -p /var/log/icescrum
+chown www-data:www-data /var/log/icescrum
+
 # for some reason on setup icescrum doesn't honor our setting of config
 # location, on subsequent launches it does so we can safely move it after
 # setup
-mv /root/.icescrum/config.groovy /var/www/icescrum
+#mv /root/.icescrum/config.groovy /etc/icescrum
 
 # set default configuration
 /usr/lib/inithooks/bin/icescrum.py --pass=$ADMIN_PASS --email=$ADMIN_MAIL --domain=$DOMAIN
